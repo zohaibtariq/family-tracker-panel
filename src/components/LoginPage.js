@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {verifyOTP, sendOTP, selectAccessToken, selectApiErrors} from '../store/authSlice';
+import {
+    verifyOTP,
+    sendOTP,
+    selectAccessToken,
+    selectApiErrors,
+    selectIsLoggedIn
+} from '../store/authSlice';
 import ErrorComponent from './ErrorComponent';
 
 // import {verifyOTP} from "../api/api"; // Make sure to import 'sendOTP'
@@ -12,6 +18,7 @@ const LoginPage = () => {
     // const accessToken = useSelector((state) => state.auth.accessToken);
     const accessToken = useSelector(selectAccessToken);
     const apiErrors = useSelector(selectApiErrors);
+    const isLoggedIn = useSelector(selectIsLoggedIn);
     // const error = useSelector((state) => state.auth.error);
     // const [apiErrors, setApiErrors] = useState([]);
 
@@ -48,7 +55,7 @@ const LoginPage = () => {
 
     return (
         <div>
-            <h1>Login</h1>
+            <h1>Login Page</h1>
             <input
                 type="text"
                 placeholder="Phone Number"
@@ -63,6 +70,7 @@ const LoginPage = () => {
                 onChange={(e) => setOtp(e.target.value)}
             />
             <button onClick={handleVerifyOTP}>Login</button>
+            {isLoggedIn && <p>LOGIN: {isLoggedIn?'TRUE':'FALSE'}</p>}
             {accessToken && <p>Access Token: {accessToken}</p>}
     {apiErrors && apiErrors.length > 0 && <ErrorComponent errors={apiErrors} />} {/* Display API
      errors */}
