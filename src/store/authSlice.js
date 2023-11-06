@@ -1,5 +1,5 @@
 import {createSlice, createAsyncThunk, /*isRejectedWithValue*/} from '@reduxjs/toolkit';
-import api from '../api/api';
+import api from '../api/auth';
 
 const initialState = {
   accessToken: null,
@@ -49,6 +49,16 @@ export const verifyOTP = createAsyncThunk('auth/verifyOTP', async (data, {reject
   }
 });
 
+export const handleLogout = (callback) => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('isLoggedIn');
+  if(callback) // TODO use it to redirect to some login page
+    callback()
+};
+
 // Async Thunk to log in
 // export const login = createAsyncThunk('auth/login', async (data) => {
 //   try {
@@ -72,7 +82,17 @@ export const verifyOTP = createAsyncThunk('auth/verifyOTP', async (data, {reject
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    // TODO think again is it a good idea to store access token in store is it a standard
+    //  practice? while of no use in our case bcz we are using localstorage
+    setTokens: (state, action) => {
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      state.user = action.payload.user;
+      state.userId = action.payload.userId;
+      state.isLoggedIn = action.payload.isLoggedIn;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(sendOTP.fulfilled, (state, action) => {
@@ -82,6 +102,7 @@ const authSlice = createSlice({
         state.userId = null;
         state.isLoggedIn = false;
         state.apiErrors = [];
+        handleLogout()
       })
       .addCase(sendOTP.rejected, (state, action) => {
         console.log('addCase sendOTP.rejected')
@@ -92,6 +113,7 @@ const authSlice = createSlice({
         state.userId = null;
         state.isLoggedIn = false;
         state.apiErrors = action.payload;
+        handleLogout()
       })
       .addCase(verifyOTP.fulfilled, (state, action) => {
         console.log('addCase verifyOTP.fulfilled')
@@ -100,8 +122,13 @@ const authSlice = createSlice({
         state.refreshToken = action.payload?.refreshToken;
         state.user = action.payload?.user;
         state.userId = action.payload?.userId;
-        state.isLoggedIn = (action.payload?.accessToken || action.payload?.refreshToken || action.payload?.user || action.payload?.userId)
+        state.isLoggedIn = Boolean(action.payload?.accessToken || action.payload?.refreshToken || action.payload?.user || action.payload?.userId)
         state.apiErrors = [];
+        localStorage.setItem('accessToken', state.accessToken);
+        localStorage.setItem('refreshToken', state.refreshToken);
+        localStorage.setItem('user', state.user);
+        localStorage.setItem('userId', state.userId);
+        localStorage.setItem('isLoggedIn', state.isLoggedIn);
       })
       .addCase(verifyOTP.rejected, (state, action) => {
         console.log('addCase verifyOTP.rejected')
@@ -112,10 +139,11 @@ const authSlice = createSlice({
         state.userId = null;
         state.isLoggedIn = false;
         state.apiErrors = action.payload;
+        handleLogout()
       })
     },
 });
-
+export const { setTokens } = authSlice.actions;
 export const selectAccessToken = (state) => state.auth.accessToken;
 export const selectRefreshToken = (state) => state.auth.refreshToken;
 export const selectUser = (state) => state.auth.user;
