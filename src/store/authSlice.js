@@ -3,6 +3,10 @@ import api from '../api/api';
 
 const initialState = {
   accessToken: null,
+  refreshToken: null,
+  user: null,
+  userId: null,
+  isLoggedIn: false,
   // error: null,
   apiErrors: [],
 };
@@ -72,50 +76,51 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(sendOTP.fulfilled, (state, action) => {
-        // Handle OTP sent successfully, you can update state if needed
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.user = null;
+        state.userId = null;
+        state.isLoggedIn = false;
         state.apiErrors = [];
       })
       .addCase(sendOTP.rejected, (state, action) => {
         console.log('addCase sendOTP.rejected')
         console.log(action)
-        console.log(action.payload)
-        console.log(action.error)
-        // state.error = action.error.message; // Update error state
-        // state.apiErrors = action.error.message;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.user = null;
+        state.userId = null;
+        state.isLoggedIn = false;
         state.apiErrors = action.payload;
       })
       .addCase(verifyOTP.fulfilled, (state, action) => {
-        state.accessToken = action.payload.accessToken; // Store access token on successful verification
-        // state.error = null; // Clear error
+        console.log('addCase verifyOTP.fulfilled')
+        console.log(action)
+        state.accessToken = action.payload?.accessToken;
+        state.refreshToken = action.payload?.refreshToken;
+        state.user = action.payload?.user;
+        state.userId = action.payload?.userId;
+        state.isLoggedIn = (action.payload?.accessToken || action.payload?.refreshToken || action.payload?.user || action.payload?.userId)
         state.apiErrors = [];
       })
       .addCase(verifyOTP.rejected, (state, action) => {
         console.log('addCase verifyOTP.rejected')
         console.log(action)
-        console.log(action.payload)
-        console.log(action.error)
-        // state.error = action.error.message; // Update error state
-        // state.apiErrors = action.error.message;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.user = null;
+        state.userId = null;
+        state.isLoggedIn = false;
         state.apiErrors = action.payload;
       })
-      // .addCase(login.fulfilled, (state, action) => {
-      //   state.accessToken = action.payload.accessToken; // Store access token on successful login
-      //   state.error = null; // Clear error
-      // })
-      // .addCase(login.rejected, (state, action) => {
-      //   state.error = action.error.message; // Update error state
-      // })
-      // .addCase(signup.fulfilled, (state, action) => {
-      //   state.accessToken = action.payload.accessToken; // Store access token on successful signup
-      //   state.error = null; // Clear error
-      // })
-      // .addCase(signup.rejected, (state, action) => {
-      //   state.error = action.error.message; // Update error state
-      // });
     },
 });
 
 export const selectAccessToken = (state) => state.auth.accessToken;
+export const selectRefreshToken = (state) => state.auth.refreshToken;
+export const selectUser = (state) => state.auth.user;
+export const selectUserId = (state) => state.auth.userId;
+export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const selectApiErrors = (state) => state.auth.apiErrors;
 
 export default authSlice.reducer;

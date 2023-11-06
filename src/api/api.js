@@ -13,7 +13,6 @@ export const sendOTP = async (phoneNumber) => {
     try {
         const response = await api.post('/otp/send', {
             "countryCode": "+92", // TODO we need to make it dynamic, it should be used in api
-            // as well
             "phoneNumber": phoneNumber
         });
         return response.data;
