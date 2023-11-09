@@ -1,5 +1,41 @@
 import {createSlice, createAsyncThunk, /*isRejectedWithValue*/} from '@reduxjs/toolkit';
-import api from '../api/auth';
+import authApi from '../api/auth';
+import {getNewAccessTokenFromRefreshToken, updateNewToken} from '../api/api';
+export const getNewAccessTokenFromStoredRefreshToken = createAsyncThunk('auth/getNewAccessTokenFromRefreshToken', async (data, {rejectWithValue}) => {
+  try {
+    console.log('authSlice:::getNewAccessTokenFromStoredRefreshToken success')
+    console.log(data)
+    // const response =
+    await getNewAccessTokenFromRefreshToken().then((newTokens) => {
+      console.log(':::getNewAccessTokenFromRefreshToken then')
+      console.log(newTokens)
+      updateNewToken(newTokens)
+      // Update the access token in your store or wherever you store it
+      // updateAccessToken(newTokens.accessToken); // Implement this function
+      // Repeat the original request with the new access token
+      // const originalRequest = response.config;
+      // originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
+      // return api(originalRequest);
+    })
+        .catch((refreshError) => {
+          console.log(':::refreshError')
+          console.log(refreshError)
+          // Handle token refresh error, e.g., logout the user
+          return Promise.reject(refreshError);
+        });
+  } catch (error) {
+    console.log('authSlice::getNewAccessTokenFromStoredRefreshToken error....')
+    console.log(error)
+    console.log(error.response.data)
+    // throw error.response.data;
+    // throw error.response.data.message
+    // throw error.response.data;
+    // throw error.response;
+    // return isRejectedWithValue(error.response.data.message)
+    // throw rejectWithValue(error.response.data.message)
+    // return {error: error.response.data.message}
+  }
+});
 
 const initialState = {
   accessToken: null,
@@ -14,7 +50,7 @@ const initialState = {
 // Async Thunk to send OTP
 export const sendOTP = createAsyncThunk('auth/sendOTP', async (phoneNumber, {rejectWithValue}) => {
   try {
-    const response = await api.sendOTP(phoneNumber); // Replace with your API call
+    const response = await authApi.sendOTP(phoneNumber); // Replace with your API call
     console.log('authSlice::sendOTP success')
     console.log(response)
     return response.data;
@@ -33,7 +69,7 @@ export const verifyOTP = createAsyncThunk('auth/verifyOTP', async (data, {reject
   try {
     console.log('authSlice:::verifyOTP success')
     console.log(data)
-    const response = await api.verifyOTP(data); // Replace with your API call
+    const response = await authApi.verifyOTP(data); // Replace with your API call
     return response.data;
   } catch (error) {
     console.log('authSlice::verifyOTP error....')
@@ -50,6 +86,7 @@ export const verifyOTP = createAsyncThunk('auth/verifyOTP', async (data, {reject
 });
 
 export const handleLogout = (callback) => {
+  console.log('handleLogout called')
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('user');
@@ -62,7 +99,7 @@ export const handleLogout = (callback) => {
 // Async Thunk to log in
 // export const login = createAsyncThunk('auth/login', async (data) => {
 //   try {
-//     const response = await api.login(data); // Replace with your API call
+//     const response = await authApi.login(data); // Replace with your API call
 //     return response.data;
 //   } catch (error) {
 //     throw error.response.data;
@@ -72,7 +109,7 @@ export const handleLogout = (callback) => {
 // Async Thunk to sign up
 // export const signup = createAsyncThunk('auth/signup', async (data) => {
 //   try {
-//     const response = await api.signup(data); // Replace with your API call
+//     const response = await authApi.signup(data); // Replace with your API call
 //     return response.data;
 //   } catch (error) {
 //     throw error.response.data;

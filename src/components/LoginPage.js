@@ -5,7 +5,9 @@ import {
     sendOTP,
     selectAccessToken,
     selectApiErrors,
-    selectIsLoggedIn
+    selectIsLoggedIn,
+    getNewAccessTokenFromStoredRefreshToken,
+    handleLogout
 } from '../store/authSlice';
 import ErrorComponent from './ErrorComponent';
 
@@ -49,8 +51,18 @@ const LoginPage = () => {
         console.error('handleVerifyOTP....')
         console.error(error)
           // dispatch(authSlice.actions.setApiErrors(error.response.data.message));
-
       }
+    };
+
+    const handleGetNewAccessTokenFromRefreshToken = async () => {
+        try {
+            const response = await dispatch(getNewAccessTokenFromStoredRefreshToken());
+            console.log('handleGetNewAccessTokenFromRefreshToken')
+            console.log(response)
+        } catch (error) {
+            console.error('handleGetNewAccessTokenFromRefreshToken')
+            console.error(error)
+        }
     };
 
     return (
@@ -74,6 +86,16 @@ const LoginPage = () => {
             {accessToken && <p>Access Token: {accessToken}</p>}
     {apiErrors && apiErrors.length > 0 && <ErrorComponent errors={apiErrors} />} {/* Display API
      errors */}
+            <br/>
+            <br/>
+            <br/>
+            <button onClick={handleGetNewAccessTokenFromRefreshToken}>GEN NEW ACCESS TOKEN FROM REFRESH TOKEN</button>
+            <br/>
+            <br/>
+            <br/>
+            <button onClick={(() => {
+                handleLogout(() => {})
+            })}>Logout</button>
         </div>
     );
 };
