@@ -1,8 +1,8 @@
 import api from './api';
 
 export const sendOTP = async (phoneNumber) => {
-    console.log('API:::sendOTP')
-    console.log(phoneNumber)
+    // console.log('API:::sendOTP')
+    // console.log(phoneNumber)
     try {
         const response = await api.post('/otp/send', {
             "countryCode": "+92", // TODO we need to make it dynamic, it should be used in auth
@@ -16,8 +16,8 @@ export const sendOTP = async (phoneNumber) => {
 
 // API function to verify OTP
 export const verifyOTP = async (data) => {
-    console.log('API:::verifyOTP:::success')
-    console.log(data)
+    // console.log('API:::verifyOTP:::success')
+    // console.log(data)
     try {
         const response = await api.post('/otp/verify', {
             "countryCode": "+92",

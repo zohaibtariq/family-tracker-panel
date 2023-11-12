@@ -27,8 +27,8 @@ const LoginPage = () => {
     const handleSendOTP = async () => {
       try {
         const response = await dispatch(sendOTP(phoneNumber));
-        console.log('handleSendOTP response')
-        console.log(response)
+        // console.log('handleSendOTP response')
+        // console.log(response)
         const otp = response.payload.otp;
         setOtp(otp);
           // dispatch(authSlice.actions.clearApiErrors());
@@ -43,8 +43,8 @@ const LoginPage = () => {
     const handleVerifyOTP = async () => {
       try {
         const response = await dispatch(verifyOTP({ phoneNumber, otp }));
-        console.log('handleVerifyOTP response')
-        console.log(response)
+        // console.log('handleVerifyOTP response')
+        // console.log(response)
           // dispatch(authSlice.actions.clearApiErrors());
 
       } catch (error) {
@@ -57,8 +57,8 @@ const LoginPage = () => {
     const handleGetNewAccessTokenFromRefreshToken = async () => {
         try {
             const response = await dispatch(getNewAccessTokenFromStoredRefreshToken());
-            console.log('handleGetNewAccessTokenFromRefreshToken')
-            console.log(response)
+            // console.log('handleGetNewAccessTokenFromRefreshToken')
+            // console.log(response)
         } catch (error) {
             console.error('handleGetNewAccessTokenFromRefreshToken')
             console.error(error)
