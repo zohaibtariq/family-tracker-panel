@@ -3,12 +3,12 @@ import authApi from '../api/auth';
 import {getNewAccessTokenFromRefreshToken, updateNewToken} from '../api/api';
 export const getNewAccessTokenFromStoredRefreshToken = createAsyncThunk('auth/getNewAccessTokenFromRefreshToken', async (data, {rejectWithValue}) => {
   try {
-    console.log('authSlice:::getNewAccessTokenFromStoredRefreshToken success')
-    console.log(data)
+    // console.log('authSlice:::getNewAccessTokenFromStoredRefreshToken success')
+    // console.log(data)
     // const response =
     await getNewAccessTokenFromRefreshToken().then((newTokens) => {
-      console.log(':::getNewAccessTokenFromRefreshToken then')
-      console.log(newTokens)
+      // console.log(':::getNewAccessTokenFromRefreshToken then')
+      // console.log(newTokens)
       updateNewToken(newTokens)
       // Update the access token in your store or wherever you store it
       // updateAccessToken(newTokens.accessToken); // Implement this function
@@ -51,8 +51,8 @@ const initialState = {
 export const sendOTP = createAsyncThunk('auth/sendOTP', async (phoneNumber, {rejectWithValue}) => {
   try {
     const response = await authApi.sendOTP(phoneNumber); // Replace with your API call
-    console.log('authSlice::sendOTP success')
-    console.log(response)
+    // console.log('authSlice::sendOTP success')
+    // console.log(response)
     return response.data;
   } catch (error) {
     console.log('authSlice::sendOTP error')
@@ -67,8 +67,8 @@ export const sendOTP = createAsyncThunk('auth/sendOTP', async (phoneNumber, {rej
 // Async Thunk to verify OTP
 export const verifyOTP = createAsyncThunk('auth/verifyOTP', async (data, {rejectWithValue}) => {
   try {
-    console.log('authSlice:::verifyOTP success')
-    console.log(data)
+    // console.log('authSlice:::verifyOTP success')
+    // console.log(data)
     const response = await authApi.verifyOTP(data); // Replace with your API call
     return response.data;
   } catch (error) {
@@ -86,7 +86,7 @@ export const verifyOTP = createAsyncThunk('auth/verifyOTP', async (data, {reject
 });
 
 export const handleLogout = (callback) => {
-  console.log('handleLogout called')
+  // console.log('handleLogout called')
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('user');
@@ -142,8 +142,8 @@ const authSlice = createSlice({
         handleLogout()
       })
       .addCase(sendOTP.rejected, (state, action) => {
-        console.log('addCase sendOTP.rejected')
-        console.log(action)
+        // console.log('addCase sendOTP.rejected')
+        // console.log(action)
         state.accessToken = null;
         state.refreshToken = null;
         state.user = null;
@@ -153,8 +153,8 @@ const authSlice = createSlice({
         handleLogout()
       })
       .addCase(verifyOTP.fulfilled, (state, action) => {
-        console.log('addCase verifyOTP.fulfilled')
-        console.log(action)
+        // console.log('addCase verifyOTP.fulfilled')
+        // console.log(action)
         state.accessToken = action.payload?.accessToken;
         state.refreshToken = action.payload?.refreshToken;
         state.user = action.payload?.user;
@@ -168,8 +168,8 @@ const authSlice = createSlice({
         localStorage.setItem('isLoggedIn', state.isLoggedIn);
       })
       .addCase(verifyOTP.rejected, (state, action) => {
-        console.log('addCase verifyOTP.rejected')
-        console.log(action)
+        // console.log('addCase verifyOTP.rejected')
+        // console.log(action)
         state.accessToken = null;
         state.refreshToken = null;
         state.user = null;

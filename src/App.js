@@ -28,8 +28,8 @@ function App() {
             }));
         }
     }, [dispatch]);
-    console.log('App::isLoggedIn')
-    console.log(isLoggedIn)
+    // console.log('App::isLoggedIn')
+    // console.log(isLoggedIn)
     return (
         <Router>
             <Routes>

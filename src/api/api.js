@@ -10,8 +10,8 @@ const api = axios.create({
 // Request Interceptor
 api.interceptors.request.use(
     (config) => {
-        console.log('api.interceptors.request.use.config')
-        console.log(config)
+        // console.log('api.interceptors.request.use.config')
+        // console.log(config)
         // Get the access token from your store or wherever you store it
         if(config.url === "/otp/refresh"){ // if call from refresh token then inject refresh
             // token other vice inject access token
@@ -39,9 +39,9 @@ api.interceptors.response.use(
         if (response.status === 401) {
             return getNewAccessTokenFromRefreshToken()
                 .then((newTokens) => {
-                    console.log('getNewAccessTokenFromRefreshToken then')
-                    console.log(newTokens.data.data.accessToken)
-                    console.log(newTokens.data.data.refreshToken)
+                    // console.log('getNewAccessTokenFromRefreshToken then')
+                    // console.log(newTokens.data.data.accessToken)
+                    // console.log(newTokens.data.data.refreshToken)
                     // Update the access token in your store or wherever you store it
                     updateNewToken(newTokens.data.data); // Implement this function
                     // Repeat the original request with the new access token
@@ -80,8 +80,8 @@ export function getNewAccessTokenFromRefreshToken(){
 }
 
 export function updateNewToken({data}){
-    console.log('updateNewToken')
-    console.log(data)
+    // console.log('updateNewToken')
+    // console.log(data)
     if(data){
         localStorage.setItem('accessToken', data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.refreshToken);
