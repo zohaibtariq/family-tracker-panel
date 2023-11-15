@@ -19,3 +19,6 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+// TODO integrate coreui-free-react-admin-template-main
+//  https://coreui.io/product/free-react-admin-template/ https://coreui.io/demos/react/4.5/free/#/dashboard
